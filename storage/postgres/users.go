@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"log"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jasurxaydarov/todo_app/models"
@@ -19,7 +20,34 @@ func NewUserRepo(con *pgx.Conn)repoi.UserRepoI{
 	}
 }
 
-func (u *UserRepo) CreateUser(ctx context.Context, user models.User) error                 {
+func (u *UserRepo) CreateUser(ctx context.Context, user models.User) error{
+
+	query := `
+		INSERT INTO 
+			users (
+				user_id, 
+				user_name, 
+				password, 
+				created_at
+			) VALUES (
+			 	$1, $2, $3, $4
+			)`
+	_,err:=u.conn.Exec(
+		ctx,query,
+		user.UserID,
+		user.UserName,
+		user.Password,
+		user.CreatedAt,
+	
+	)
+
+	if err != nil {
+
+
+		log.Println("error on CreateUser",err)
+		return err
+	}
+	
 
 	return nil
 }

@@ -23,7 +23,7 @@ func Load()*Config{
 	Config.DbUserPassword="1001"
 	Config.DbHost="localhost"
 	Config.DbPort=5432
-	Config.DbName="postgres"
+	Config.DbName="todo"
 
 	return &Config
 }
