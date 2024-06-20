@@ -19,9 +19,11 @@ func Api(options Options)*http.ServeMux{
 	
 	api:=http.NewServeMux()
 
-	api.HandleFunc("POST /api/crete-user",h.CreateUsers)
+	api.HandleFunc("POST /api/user",h.CreateUsers)
+	api.HandleFunc("DELETE /api/user",h.DeleteUserById)
 	api.HandleFunc("GET /api/get-user",h.GetUSerById)
-	api.HandleFunc("GET /api/get-users",h.GetUSers)
+	api.HandleFunc("GET /api/user",h.GetUSers)
+	api.HandleFunc("POST /api/user-update",h.UpdateUserById)
 
 	return api
 }

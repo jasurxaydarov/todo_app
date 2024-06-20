@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"log"
-
 	"github.com/jackc/pgx/v5"
 	"github.com/jasurxaydarov/todo_app/models"
 	"github.com/jasurxaydarov/todo_app/storage/repoi"
@@ -137,3 +136,59 @@ func(u *UserRepo)GetUSerById(ctx context.Context,name string)(*models.User,error
 	return &user,nil
 
 } 
+
+
+func (u *UserRepo)UpdateUserById(ctx context.Context,user models.User)error{
+
+
+	query:=`
+		UPDATE 
+			users 
+		SET 
+			user_name = $1,
+			password =$2 
+		WHERE 
+			user_id = $3;`
+
+
+	_,err:=u.conn.Exec(
+		ctx,query,
+		user.UserName,
+		user.Password,
+		user.UserID,
+	)
+
+
+
+	if err != nil{
+
+		log.Println("error on update user by id",err)
+		return err
+	}
+
+
+	return nil
+
+}
+func (u *UserRepo)DeleteUserByName(ctx context.Context,name string)error{
+
+	query:=`
+	
+	DELETE
+	FROM 
+		users 
+	WHERE 
+		user_name=$1
+	
+	`
+	_,err:=u.conn.Exec(ctx,query,name)
+
+	if err != nil{
+
+		log.Println("error on delete user by id",err)
+		return err
+	}
+
+	return nil
+
+}

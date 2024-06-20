@@ -37,7 +37,7 @@ func (h *handlers) CreateUsers(resp http.ResponseWriter, req *http.Request) {
 
 	resp.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(resp).Encode(user)
+	json.NewEncoder(resp).Encode(&user)
 
 
 }
@@ -45,7 +45,11 @@ func (h *handlers) CreateUsers(resp http.ResponseWriter, req *http.Request) {
 func (h *handlers)GetUSerById(resp http.ResponseWriter,req *http.Request){
 
 
-	user,err:=h.storage.GetUserRepo().GetUSerById(context.Background(),"jasur1")
+	var use models.User
+
+	use.UserName="jasur"
+
+	user,err:=h.storage.GetUserRepo().GetUSerById(context.Background(),use.UserName)
 
 	if err != nil {
 
@@ -56,7 +60,7 @@ func (h *handlers)GetUSerById(resp http.ResponseWriter,req *http.Request){
 
 	resp.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(resp).Encode(user)
+	json.NewEncoder(resp).Encode(&user)
 
 }
 
@@ -76,6 +80,67 @@ func (h *handlers)GetUSers(resp http.ResponseWriter, req *http.Request){
 	
 	resp.Header().Set("Content-Type","application/json")
 	
-	json.NewEncoder(resp).Encode(user)
+	json.NewEncoder(resp).Encode(&user)
+
+}
+
+
+func (h *handlers)UpdateUserById(resp http.ResponseWriter,req *http.Request){
+
+
+	var user models.User
+
+	err:=json.NewDecoder(req.Body).Decode(&user)
+
+	if err!= nil{
+
+		http.Error(resp, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+
+
+	err=h.storage.GetUserRepo().UpdateUserById(context.Background(),user)
+
+	if err!= nil{
+
+		http.Error(resp,"err on UpdateUserById",http.StatusInternalServerError)
+		
+		return
+
+	}
+
+	resp.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(resp).Encode(&user)
+
+
+}
+
+
+func (h *handlers)DeleteUserById(resp http.ResponseWriter, req *http.Request){
+
+	var user models.User
+
+	
+	err:=json.NewDecoder(req.Body).Decode(&user.UserName)
+
+	if err != nil{
+
+		http.Error(resp,err.Error(),http.StatusBadRequest)
+		return
+	}
+
+	err=h.storage.GetUserRepo().DeleteUserByName(context.Background(),user.UserName)
+
+	if err != nil{
+
+		http.Error(resp,"error on DeleteUserById  ",http.StatusInternalServerError)
+		return
+	} 
+
+	resp.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(resp).Encode(&user)
 
 }
