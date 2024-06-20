@@ -11,10 +11,11 @@ import (
 )
 
 func (h *handlers) CreateUsers(resp http.ResponseWriter, req *http.Request) {
+	
 	var user models.User
 
 	err := json.NewDecoder(req.Body).Decode(&user)
-
+ 
 	if err != nil {
 
 		http.Error(resp, err.Error(), http.StatusBadRequest)
@@ -36,6 +37,45 @@ func (h *handlers) CreateUsers(resp http.ResponseWriter, req *http.Request) {
 
 	resp.Header().Set("Content-Type", "application/json")
 
+	json.NewEncoder(resp).Encode(user)
+
+
+}
+
+func (h *handlers)GetUSerById(resp http.ResponseWriter,req *http.Request){
+
+
+	user,err:=h.storage.GetUserRepo().GetUSerById(context.Background(),"jasur1")
+
+	if err != nil {
+
+		http.Error(resp, "err  GetUSerById ", http.StatusInternalServerError)
+		return
+
+	}
+
+	resp.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(resp).Encode(user)
+
+}
+
+
+func (h *handlers)GetUSers(resp http.ResponseWriter, req *http.Request){
+
+	limi,page:= 3, 1
+
+	user, err:= h.storage.GetUserRepo().GetUSers(context.Background(), limi, page)
+
+	if err!= nil{
+
+		http.Error(resp, "error on get users", http.StatusInternalServerError)
+
+		return 
+	}
+	
+	resp.Header().Set("Content-Type","application/json")
+	
 	json.NewEncoder(resp).Encode(user)
 
 }

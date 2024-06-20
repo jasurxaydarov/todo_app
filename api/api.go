@@ -20,6 +20,8 @@ func Api(options Options)*http.ServeMux{
 	api:=http.NewServeMux()
 
 	api.HandleFunc("POST /api/crete-user",h.CreateUsers)
+	api.HandleFunc("GET /api/get-user",h.GetUSerById)
+	api.HandleFunc("GET /api/get-users",h.GetUSers)
 
 	return api
 }

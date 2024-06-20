@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -22,7 +23,8 @@ func main() {
 
 		return		
 	}
-
+	defer conn.Close(context.Background())
+	
 	log.Println("sucessfully connected with db ")
 
 	fmt.Println(conn)

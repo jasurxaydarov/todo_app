@@ -9,5 +9,7 @@ import (
 type UserRepoI interface{
 	
 	CreateUser(ctx context.Context, user models.User)error
-	GetUSer(ctx context.Context, limit, page int)(*models.User, error)
+	GetUSerById(ctx context.Context,name string)(*models.User, error)
+
+	GetUSers(ctx context.Context, limit, page int)([]*models.User, error)
 }
